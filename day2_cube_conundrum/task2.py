@@ -54,3 +54,4 @@ for game in file: # One Game
 print(s)
 
 ##############################################
+file.close()
