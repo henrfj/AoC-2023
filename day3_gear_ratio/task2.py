@@ -1,8 +1,23 @@
+"""
+The missing part wasn't the only issue - one of the gears in the engine is wrong.
+A gear is any * symbol that is adjacent to exactly two part numbers. Its gear ratio is the result of multiplying those two numbers together.
 
+"""
 
-def find_sum_of_parts(schematic):
+schematic = ["467..114..",
+"...*......",
+"..35..633.",
+"......#...",
+"617*......",
+".....+.58.",
+"..592.....",
+"......755.",
+"...$.*....",
+".664.598.."]
+
+def find_gear_ratios(schematic):
     # Initialize sum of part numbers
-    sum_parts = 0
+    gear_dict = {}
 
     # Traverse the 2D list
     for i in range(len(schematic)):
@@ -20,16 +35,25 @@ def find_sum_of_parts(schematic):
                             x = i + di
                             y = j + dj
                             #
-                            if 0 <= x < len(schematic) and 0 <= y < len(schematic[0]) and schematic[x][y] not in ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                                sum_parts += int(number)
+                            if 0 <= x < len(schematic) and 0 <= y < len(schematic[0]) and schematic[x][y] == "*":
+                                try:
+                                    gear_dict[(x, y)].append(number) 
+                                except KeyError:
+                                    gear_dict[(x, y)] = [number]
                                 break
                     number = ""  # Reset current number
-    return sum_parts
+    return gear_dict
 
 with open('input.txt', 'r') as f:
     schematic = [list(line.strip()) for line in f]
 
 
-sum_of_parts = find_sum_of_parts(schematic)
+gear_dict = find_gear_ratios(schematic)
 
-print(sum_of_parts)
+sum_of_ratios = 0
+for k in gear_dict.keys():
+    if len(gear_dict[k]) == 2:
+        sum_of_ratios += int(gear_dict[k][0]) * int(gear_dict[k][1])
+
+
+print(sum_of_ratios)
